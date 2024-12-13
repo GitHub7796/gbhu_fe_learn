@@ -1,0 +1,43 @@
+module.exports = {
+    // 运行环境
+    "env": {
+        // 浏览器
+        "browser": true,
+        // es2021
+        "es2021": true
+    },
+    // 规则集成
+    "extends": [
+        // 
+        "standard-with-typescript",
+        // vue3语法
+        "plugin:vue/vue3-essential"
+    ],
+    // 特定文件类型指定处理器
+    "overrides": [
+        {
+            "env": {
+                "node": true
+            },
+            "files": [
+                ".eslintrc.{js,cjs}"
+            ],
+            "parserOptions": {
+                "sourceType": "script"
+            }
+        }
+    ],
+    // 指定解析器选项
+    "parserOptions": {
+        "ecmaVersion": "latest",//校验ECMA最新版本
+        "sourceType": "module"//设置为"script"（默认），或者"module"代码在ECMAScript模块中
+    },
+    // 支持第三方插件,使用前需npm安装
+    // eslint-plugin-前缀可以从插件名称被省略
+    "plugins": [
+        "vue"
+    ],
+    // eslint规则
+    "rules": {
+    }
+}
