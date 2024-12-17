@@ -4,8 +4,9 @@ import path from 'path' //npm path模块,用于配置文件别名
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' //svg 插件
 import { viteMockServe } from 'vite-plugin-mock' //mock 插件
 // https://vite.dev/config/
-export default defineConfig((command)=>{//command 为 mock 配置
-  return{
+export default defineConfig((command) => {
+  //command 为 mock 配置
+  return {
     plugins: [
       vue(),
       createSvgIconsPlugin({

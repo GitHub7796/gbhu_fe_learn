@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'//消息提示组件
+import { ElMessage } from 'element-plus' //消息提示组件
 let request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 5000,
@@ -13,7 +13,8 @@ request.interceptors.response.use(
   (response) => {
     return response.data
   },
-  (error) => { //处理不同错误，显示不同组件
+  (error) => {
+    //处理不同错误，显示不同组件
     let msg = ''
     let status = error.response.status
     switch (status) {
@@ -40,4 +41,4 @@ request.interceptors.response.use(
   },
 )
 
-export default request;
+export default request
