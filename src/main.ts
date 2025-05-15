@@ -1,34 +1,31 @@
 import { createApp } from 'vue'
-import App from '@/App.vue'
-//引入模板的全局的样式
-import '@/styles/index.scss'
-//引入element-plus插件与样式
+
+// element-plus
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-//svg插件需要配置代码
-import 'virtual:svg-icons-register'
-//引入自定义插件对象:注册整个项目全局组件
-import gloalComponent from '@/components'
-//配置element-plus国际化
-//@ts-expect-error
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-//暗黑模式需要的样式
-import 'element-plus/theme-chalk/dark/css-vars.css'
-//引入路由
-import router from './router'
-//引入仓库
+import zhCn from 'element-plus/es/locale/lang/zh-cn' // 国际化
+import App from '@/App.vue'
+import '@/styles/index.scss' //引入sass
+import 'virtual:svg-icons-register' // 加载svg 插件
 import pinia from './store'
-//获取应用实例对象
+import axios from 'axios'
+
+import router from './router'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue' //引入所有的icon
+import './permisstion'
 const app = createApp(App)
-//安装element-plus插件
 app.use(ElementPlus, {
-  locale: zhCn, //element-plus国际化配置
+  locale: zhCn, // 国际化
 })
-//安装自定义插件
-app.use(gloalComponent)
-//安装仓库
+//注册所有icon为全局图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+console.log('app.use(pinia)')
 app.use(pinia)
-//注册模板路由
+console.log('app.use(globalComponent)')
+import globalComponent from './components/Index'
+app.use(globalComponent)
+console.log('app.use(router)')
 app.use(router)
-//将应用挂载到挂载点上
 app.mount('#app')
