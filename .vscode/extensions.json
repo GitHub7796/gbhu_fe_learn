@@ -1,0 +1,14 @@
+{
+  // List of extensions which should be recommended for users of this workspace.
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "PKief.material-icon-theme",
+    "k--kato.intellij-idea-keybindings",
+    "Vue.volar",
+    "AMiner.codegeex",
+    "wayou.vscode-todo-highlight",
+    "Gruntfuggly.todo-tree",
+    "hollowtree.vue-snippets"
+  ]
+}
