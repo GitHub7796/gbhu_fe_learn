@@ -11,7 +11,6 @@ request.interceptors.request.use((config) => {
   if (userState.token) {
     config.headers.token = userState.token
   }
-  console.log(config)
   return config
 })
 // 相应拦截器，有2回调：成功、失败

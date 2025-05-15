@@ -19,19 +19,18 @@ import { ResponseData } from '@/api/type'
     "success": true
 }
 
-
  */
-export interface CategoryObj{
-    // 因为初始化为空，而不是0，所以需要联合类型
-    id:number|string,
-    name:string,
-    createTime:string,
-    updateTime:string,
-    category1Id?:number|string,
-    category2Id?:number|string,
-} 
-export interface CategoryResponseData extends ResponseData{
-    data:CategoryObj[]
+export interface CategoryObj {
+  // 因为初始化为空，而不是0，所以需要联合类型
+  id: number | string
+  name: string
+  createTime: string
+  updateTime: string
+  category1Id?: number | string
+  category2Id?: number | string
+}
+export interface CategoryResponseData extends ResponseData {
+  data: CategoryObj[]
 }
 
 /** 
@@ -61,24 +60,26 @@ export interface CategoryResponseData extends ResponseData{
     "success": true
 }
  */
-export interface AttrValue{
-    id:number,
-    attrId:number,
-    valueName:number,
-    createTime:string,
-    updateTime:string,
+export interface AttrValue {
+  id: number
+  attrId: number
+  valueName: number
+  createTime: string
+  updateTime: string
 }
-export interface Attr{
-    id:number,
-    categoryId:number,
-    categoryLevel:number,
-    attrName:string,
-    createTime:string,
-    updateTime:string,
-    attrValueList:AttrValue[]
+export interface Attr {
+  id: number
+  categoryId: number
+  categoryLevel: number
+  attrName: string
+  createTime: string
+  updateTime: string
+  attrValueList: AttrValue[]
 }
+
 //存储每一个属性对象的数组ts类型
 export type AttrList = Attr[]
-export interface AttrResponseData extends ResponseData{
-    data:Attr[]
+
+export interface AttrResponseData extends ResponseData {
+  data: Attr[]
 }
