@@ -36,8 +36,25 @@
             width="120px"
           >
             <template #="{ row, $index }">
-              <el-button type="primary" icon="Edit" size="small"></el-button>
-              <el-button type="primary" icon="Delete" size="small"></el-button>
+              <el-button
+                type="primary"
+                icon="Edit"
+                size="small"
+                @click="updateAttr(row)"
+              ></el-button>
+              <el-popconfirm
+                title="确认删除?"
+                width="200px"
+                @confirm="deleteAttr(row.id)"
+              >
+                <template #reference>
+                  <el-button
+                    type="primary"
+                    icon="Delete"
+                    size="small"
+                  ></el-button>
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -67,11 +84,23 @@
               <el-input
                 v-model="row.valueName"
                 placeholder="请输入属性值名称"
+                v-if="row.flag"
+                @blur="toLook(row, $index)"
               ></el-input>
-              <div></div>
+              <div v-else @click="toEdit(row, $index)">{{ row.valueName }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" prop="" width=""></el-table-column>
+          <el-table-column label="操作">
+            <template #="{ row, $index }">
+              <el-button
+                v-if="row.valueName"
+                type="primary"
+                size="small"
+                @click="attrParams.attrValueList.splice($index, 1)"
+                icon="Delete"
+              ></el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-button type="primary" @click="save">保存</el-button>
         <el-button type="primary" @click="cancel">取消</el-button>
@@ -81,9 +110,10 @@
 </template>
 <script setup lang="ts">
 import useCategoryStore from '@/store/modules/category'
-import { reqAttr } from '@/api/product/attr'
+import { reqAttr, reqAddOrUpdateAtt, reqRemoveAttr } from '@/api/product/attr'
 import { watch, ref, reactive } from 'vue'
 import type { AttrResponseData, Attr, AttrValue } from '@/api/product/attr/type'
+import { ElMessage } from 'element-plus'
 let categoryStore = useCategoryStore()
 //存储已有的属性与属性值
 let attrArr = ref<Attr[]>([])
@@ -111,11 +141,27 @@ const addAttr = () => {
   })
   scene.value = 1
 }
-const save = () => {
+const save = async () => {
+  const result = await reqAddOrUpdateAtt(attrParams)
+  if (result.code == 200) {
+    scene.value = 0
+    ElMessage({
+      type: 'success',
+      message: attrParams.id ? '修改成功' : '添加成功',
+    })
+    // 重新获取数据
+    getAttr()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: attrParams.id ? '修改失败' : '添加失败',
+    })
+  }
   scene.value = 0
 }
 const cancel = () => {
   scene.value = 0
+  getAttr()
 }
 const addAttrValue = () => {
   attrParams.attrValueList.push({
@@ -128,6 +174,60 @@ const getAttr = async () => {
   const result = await reqAttr(c1Id, c2Id, c3Id)
   if (result.code == 200) {
     attrArr.value = result.data
+  }
+}
+const toLook = (row, $index) => {
+  //非法情况1 输入空 导致html元素塌陷
+  if (row.valueName.trim() == '') {
+    // 删除此条数据
+    attrParams.attrValueList.splice($index, 1)
+    ElMessage({
+      message: '属性不能为空',
+      type: 'error',
+    })
+  }
+
+  // 非法情况2 输入重复
+  let repeat = attrParams.attrValueList.find((item) => {
+    if (item != row) {
+      return item.valueName === row.valueName
+    }
+  })
+  if (repeat) {
+    // 删除此条数据
+    attrParams.attrValueList.splice($index, 1)
+    ElMessage({
+      message: '属性不能重复',
+      type: 'error',
+    })
+  }
+  row.flag = false
+}
+const toEdit = (row, $index) => {
+  row.flag = true
+}
+const updateAttr = (row) => {
+  scene.value = 1
+  //ES6->Object.assign进行对象的合并
+  Object.assign(attrParams, JSON.parse(JSON.stringify(row)))
+}
+//删除某一个已有的属性方法回调
+const deleteAttr = async (attrId: number) => {
+  //发相应的删除已有的属性的请求
+  let result: any = await reqRemoveAttr(attrId)
+  //删除成功
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    //获取一次已有的属性与属性值
+    getAttr()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败',
+    })
   }
 }
 </script>

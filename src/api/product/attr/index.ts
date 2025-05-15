@@ -29,9 +29,9 @@ export const reqAttr = (
   request.get<any, AttrResponseData>(
     `${API.ATTR_URL}/${category1Id}/${category2Id}/${category3Id}`,
   )
-export const reqAddOrUpdateAtt = (attr: Attr) => {
+export const reqAddOrUpdateAtt = (attr: Attr) => 
   request.post(API.ADDORUPDATEATTR_URL, attr)
-}
-export const reqRemoveAttr = (attrId: number) => {
+
+export const reqRemoveAttr = (attrId: number) => 
   request.delete(API.DELETEATTR_URL + attrId)
-}
+
