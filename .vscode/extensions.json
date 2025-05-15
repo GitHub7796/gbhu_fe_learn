@@ -9,6 +9,9 @@
     "AMiner.codegeex",
     "wayou.vscode-todo-highlight",
     "Gruntfuggly.todo-tree",
-    "hollowtree.vue-snippets"
+    "hollowtree.vue-snippets",
+    "christian-kohler.path-intellisense",
+    "atdow.vue-jumper",
+    "denjay.vue-jump"
   ]
 }
