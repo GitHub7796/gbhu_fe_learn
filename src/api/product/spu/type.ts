@@ -39,6 +39,16 @@ export interface SpuData {
   spuImageList: SpuImg[] | null
   spuSaleAttrList: SaleAttr[] | null
 }
+export type Reocrds = SpuData[]
+export interface HasSpuResponseData extends ResponseData {
+  data: {
+    records: Reocrds
+    current: number
+    pages: number
+    total: number
+    size: number
+  }
+}
 /**
  * 获取全部品牌的数据
  * {

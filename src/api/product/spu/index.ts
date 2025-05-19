@@ -11,7 +11,7 @@ import type {
 } from './type'
 enum API {
   //  GET /product/1(page)/3(limit)?category3Id=1 获取SPU内容
-  HASSPU_URL = ' /product/',
+  HASSPU_URL = '/product/',
   // GET /product/baseTrademark/getTrademarkList 获取全部品牌的数据
   ALLTRADEMARK_URL = '/product/baseTrademark/getTrademarkList/',
   // GET /product/spuImageList/14849408842400154 获取某个SPU下的全部的售卖商品的图片数据
