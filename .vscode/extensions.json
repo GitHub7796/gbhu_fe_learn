@@ -12,6 +12,7 @@
     "hollowtree.vue-snippets",
     "christian-kohler.path-intellisense",
     "atdow.vue-jumper",
-    "denjay.vue-jump"
+    "denjay.vue-jump",
+    "shardulm94.trailing-spaces"
   ]
 }
