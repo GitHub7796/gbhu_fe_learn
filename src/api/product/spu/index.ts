@@ -27,7 +27,7 @@ enum API {
   // POST /product/saveSpuInfo 新增SPU接口
   ADDSPU_URL = '/product/saveSpuInfo',
   // DELETE /product/deleteSpu/148502877067939840 删除SPU
-  REMOVESPU_URL = '/product/deleteSpu/148502877067939840',
+  REMOVESPU_URL = '/product/deleteSpu/',
 }
 export const reqHasSpu = (
   page: number,
@@ -42,7 +42,21 @@ export const reqAllTradeMark = () =>
   request.get<any, AllTradeMark>(API.ALLTRADEMARK_URL)
 
 export const reqSpuImageList = (spuId: number) =>
-  request.get(API.IMAGE_URL + spuId)
+  request.get<any, SpuHasImg>(API.IMAGE_URL + spuId)
 
 export const reqSpuHasSaleAttr = (spuId: number) =>
-  request.get(API.SPUHASSALEATTR_URL + spuId)
+  request.get<any, SaleAttrResponseData>(API.SPUHASSALEATTR_URL + spuId)
+
+export const reqAllSaleAttr = () =>
+  request.get<any, HasSaleAttrResponseData>(API.SPUHASSALEATTR_URL)
+
+export const reqAddOrUpdateSpu = (data: SpuData) => {
+  if (data.id) {
+    // 有id，更新spu
+    return request.post(API.UPDATESPU_URL, data)
+  } else {
+    return request.post(API.ADDSPU_URL, data)
+  }
+}
+export const reqRemoveSpu = (spuId: number | string) =>
+  request.delete(API.REMOVESPU_URL + spuId)
