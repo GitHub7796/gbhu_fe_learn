@@ -13,7 +13,7 @@ enum API {
   //  GET /product/1(page)/3(limit)?category3Id=1 获取SPU内容
   HASSPU_URL = '/product/',
   // GET /product/baseTrademark/getTrademarkList 获取全部品牌的数据
-  ALLTRADEMARK_URL = '/product/baseTrademark/getTrademarkList/',
+  ALLTRADEMARK_URL = '/product/baseTrademark/getTrademarkList',
   // GET /product/spuImageList/14849408842400154 获取某个SPU下的全部的售卖商品的图片数据
   IMAGE_URL = '/product/spuImageList/',
   // GET /product/spuSaleAttrList/148494088424001540 获取某一个SPU下全部的已有的销售属性接口地址
@@ -48,7 +48,7 @@ export const reqSpuHasSaleAttr = (spuId: number) =>
   request.get<any, SaleAttrResponseData>(API.SPUHASSALEATTR_URL + spuId)
 
 export const reqAllSaleAttr = () =>
-  request.get<any, HasSaleAttrResponseData>(API.SPUHASSALEATTR_URL)
+  request.get<any, HasSaleAttrResponseData>(API.ALLSALEATTR_URL)
 
 export const reqAddOrUpdateSpu = (data: SpuData) => {
   if (data.id) {

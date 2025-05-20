@@ -3,7 +3,12 @@
     <Category></Category>
     <el-card style="margin: 10px 0px">
       <div v-show="scene == 0">
-        <el-button type="primary" icon="Plus" @click="addSpu">
+        <el-button
+          type="primary"
+          icon="Plus"
+          @click="addSpu"
+          :disabled="categoryStore.c3Id ? false : true"
+        >
           添加SPU
         </el-button>
         <el-table :data="records" style="width: 100%; margin: 10px 0px" border>
@@ -17,7 +22,12 @@
           <el-table-column label="SPU操作">
             <template #="{ row, $index }">
               <el-button type="primary" size="small" icon="Plus"></el-button>
-              <el-button type="primary" size="small" icon="Edit"></el-button>
+              <el-button
+                type="primary"
+                size="small"
+                icon="Edit"
+                @click="updateSpu(row)"
+              ></el-button>
               <el-button type="primary" size="small" icon="View"></el-button>
               <el-button type="primary" size="small" icon="Delete"></el-button>
             </template>
@@ -47,13 +57,14 @@ import SpuForm from './spuForm.vue'
 import { reqHasSpu } from '@/api/product/spu'
 import { ref, watch, onBeforeUnmount } from 'vue'
 import useCategoryStore from '@/store/modules/category'
-import { Reocrds, HasSpuResponseData } from '@/api/product/spu/type'
+import { Reocrds, HasSpuResponseData, SpuData } from '@/api/product/spu/type'
 let categoryStore = useCategoryStore()
 let scene = ref<number>(0)
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(3)
 let total = ref<number>(0)
 let records = ref<Reocrds>([])
+let spu = ref<any>()
 watch(
   () => categoryStore.c3Id,
   () => {
@@ -82,6 +93,10 @@ const addSpu = () => {
 }
 const changeScene = () => {
   scene.value = 0
+}
+const updateSpu = (row: SpuData) => {
+  scene.value = 1
+  spu.value.initHasSpuData(row)
 }
 </script>
 <style></style>

@@ -29,13 +29,13 @@ import { ResponseData } from '@/api/type'
  *
  */
 export interface SpuData {
-  id: number
-  category3Id: number
-  tmId: number
+  id?: number
+  category3Id: number | string
+  tmId: number | string
   description: string
   spuName: string
-  createTime: string | null
-  updateTime: string | null
+  createTime?: string | null
+  updateTime?: string | null
   spuImageList: SpuImg[] | null
   spuSaleAttrList: SaleAttr[] | null
 }
@@ -95,12 +95,14 @@ export interface AllTradeMark extends ResponseData {
 }
  */
 export interface SpuImg {
-  id: number
-  spuId: number
-  imageName: string
-  imageUrl: string
-  createTime: string | null
-  updateTime: string | null
+  id?: number
+  spuId?: number
+  imageName?: string
+  imageUrl?: string
+  createTime?: string | null
+  updateTime?: string | null
+  name?: string
+  url?: string
 }
 export interface SpuHasImg extends ResponseData {
   data: SpuImg[]
@@ -154,6 +156,8 @@ export interface SaleAttr {
   saleAttrName: string | number
   createTime: string | null
   updateTime: string | null
+  spuSaleAttrValueList: SpuSaleAttrValueList
+  flag?: boolean
 }
 export interface SaleAttrResponseData extends ResponseData {
   data: SaleAttr[]
