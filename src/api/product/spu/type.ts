@@ -144,6 +144,7 @@ export interface SaleAttrValue {
   spuSaleNameId: number
   baseSaleAttrId: number
   saleAttrName: string
+  saleAttrValueName: string
   isChecked: null | boolean
   createTime: string | null
   updateTime: string | null

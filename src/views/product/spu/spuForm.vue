@@ -69,21 +69,42 @@
           prop="saleAttrName"
           label="销售属性名称"
         ></el-table-column>
-        <el-table-column prop="prop" label="销售属性值">
+        <el-table-column prop="spuSaleAttrValueList" label="销售属性值">
           <template #="{ row, $index }">
             <el-tag
               style="margin: 0px 5px"
-              v-for="(item, index) in row.spuSaleAttrList"
+              @close="row.spuSaleAttrValueList.splice(index, 1)"
+              v-for="(item, index) in row.spuSaleAttrValueList"
               :key="row.id"
+              class="mx-1"
             >
-              {{ item.valueName }}
+              {{ item.saleAttrValueName }}
             </el-tag>
-            <el-button type="primary" icon="Plus" size="small"></el-button>
+            <el-input
+              @blur="toLook(row)"
+              v-model="row.SaleAttrValue"
+              placeholder="请输入你的属性值"
+              size="small"
+              v-if="row.flag == true"
+              style="width: 100px"
+            ></el-input>
+            <el-button
+              @click="toEdit(row)"
+              v-else
+              type="primary"
+              icon="Plus"
+              size="small"
+            ></el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #="{ row, $index }">
-            <el-button type="primary" icon="Delete" size="small"></el-button>
+            <el-button
+              type="primary"
+              icon="Delete"
+              size="small"
+              @click="saleAttr.splice($index, 1)"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -190,7 +211,24 @@ const handlerUpload = (file: any) => {
     return false
   }
 }
+const toLook = (row: SaleAttr) => {
+  //整理收集的属性的ID与属性值的名字
+  // TODO ：
+  const { baseSaleAttrId, SaleAttrValue } = row
+  //整理成服务器需要的属性值形式
+  // TODO ：
+  let newSaleAttrValue: SaleAttrValue = {
+    baseSaleAttrId,
+    saleAttrValueName: SaleAttrValue as string,
+  }
+  row.spuSaleAttrValueList.push(newSaleAttrValue)
+  console.log(row)
 
+  row.flag = false
+}
+const toEdit = (row: SaleAttr) => {
+  row.flag = true
+}
 //对外暴露
 defineExpose({ initAddSpu, initHasSpuData })
 </script>
