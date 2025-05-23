@@ -89,6 +89,7 @@ const getHasSpu = async () => {
 }
 const addSpu = () => {
   //切换为场景1:添加与修改已有SPU结构->SpuForm
+  spu.value.initAddSpu(categoryStore.c3Id)
   scene.value = 1
 }
 const changeScene = () => {

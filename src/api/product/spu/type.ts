@@ -151,12 +151,12 @@ export interface SaleAttrValue {
 }
 export type SpuSaleAttrValueList = SaleAttrValue[]
 export interface SaleAttr {
-  id: number
-  spuId: number
-  baseSaleAttrId: number
+  id?: number
+  spuId?: number
+  baseSaleAttrId: number | string
   saleAttrName: string | number
-  createTime: string | null
-  updateTime: string | null
+  createTime?: string | null
+  updateTime?: string | null
   spuSaleAttrValueList: SpuSaleAttrValueList
   flag?: boolean
 }
@@ -260,3 +260,23 @@ export interface HasSaleAttrResponseData extends Response {
 	"spuPosterList": null
 }
  */
+
+/**
+ * 图谱上传成功
+ * {
+    "data": {
+        "ownId": 150657270471069697,
+        "imageUrl": "/image/getImage/150657270471069696/txvhickhmkwd1.png"
+    },
+    "code": 200,
+    "message": "成功",
+    "success": true
+}
+ */
+export interface imgUp {
+  owid: number
+  imageUrl: string
+}
+export interface imgUpResponseData extends ResponseData {
+  data: imgUp
+}

@@ -48,15 +48,27 @@
       </el-dialog>
     </el-form-item>
     <el-form-item label="SPU销售属性">
-      <el-select v-model="model" placeholder="">
+      <el-select
+        v-model="saleAttrIdAndValueName"
+        :placeholder="
+          unSelectSaleAttr.length
+            ? `还未选择${unSelectSaleAttr.length}个`
+            : '无'
+        "
+      >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in unSelectSaleAttr"
+          :key="item.id"
+          :label="item.name"
+          :value="`${item.id}:${item.name}`"
         ></el-option>
       </el-select>
-      <el-button type="primary" icon="Plus" style="margin: 0px 10px">
+      <el-button
+        type="primary"
+        icon="Plus"
+        style="margin: 0px 10px"
+        @click="addSaleAttr"
+      >
         添加属性
       </el-button>
       <el-table :data="saleAttr" style="width: 100%">
@@ -117,7 +129,7 @@
 </template>
 <script setup lang="ts">
 import { SpuData } from '@/api/product/spu/type'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
   reqAllTradeMark,
   reqSpuImageList,
@@ -135,8 +147,10 @@ import type {
   SpuHasImg,
   SaleAttrResponseData,
   HasSaleAttrResponseData,
+  imgUpResponseData,
 } from '@/api/product/spu/type'
 import { ElMessage } from 'element-plus'
+import { it } from 'element-plus/es/locale'
 let $emit = defineEmits(['changeScene'])
 let allSaleAttr = ref<HasSaleAttr[]>([]) // 所有销售属性
 let allTradeMark = ref<Trademark[]>([]) //已有SPU数据
@@ -144,6 +158,7 @@ let imgList = ref<SpuImg[]>([]) //商品图片
 let saleAttr = ref<SaleAttr[]>([])
 let dialogImageUrl = ref<string>('') //预览图片地址
 let dialogVisible = ref<boolean>(false) //对话框显示隐藏
+let saleAttrIdAndValueName = ref<string>('') //将来收集还未选择的销售属性的ID与属性值的名字
 let spuParams = ref<SpuData>({
   category3Id: '', //收集三级分类的ID
   spuName: '', //SPU的名字
@@ -152,11 +167,42 @@ let spuParams = ref<SpuData>({
   spuImageList: [],
   spuSaleAttrList: [],
 })
+// 计算出当前SPU还未拥有的销售属性
+let unSelectSaleAttr = computed(() => {
+  let unSelectArr = allSaleAttr.value.filter((item) => {
+    return saleAttr.value.every((item1) => {
+      return item.name != item1.saleAttrName
+    })
+  })
+  return unSelectArr
+})
 const cancel = () => {
   $emit('changeScene')
 }
-const save = () => {
-  $emit('changeScene')
+const save = async () => {
+  // 收集数据
+  console.log(imgList)
+  spuParams.value.spuImageList = imgList.value.map((item: any) => {
+    return {
+      imageName: item.name,
+      imageUrl: item.url,
+    }
+  })
+  spuParams.value.spuSaleAttrList = saleAttr.value
+  let result = await reqAddOrUpdateSpu(spuParams.value)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: spuParams.value.id ? '更新成功' : '添加成功',
+    })
+    //通知父组件切换场景为0
+    $emit('changeScene')
+  } else {
+    ElMessage({
+      type: 'success',
+      message: spuParams.value.id ? '更新成功' : '添加成功',
+    })
+  }
 }
 const initHasSpuData = async (spu: SpuData) => {
   spuParams.value = spu
@@ -178,9 +224,22 @@ const initHasSpuData = async (spu: SpuData) => {
   saleAttr.value = result2.data
   allSaleAttr.value = result3.data
 }
-const initAddSpu = async (spu: SpuData) => {
+const initAddSpu = async (c3Id: string | number) => {
+  Object.assign(spuParams.value, {
+    category3Id: '', //收集三级分类的ID
+    spuName: '', //SPU的名字
+    description: '', //SPU的描述
+    tmId: '', //品牌的ID
+    spuImageList: [],
+    spuSaleAttrList: [],
+  })
+  imgList.value = []
+  saleAttr.value = []
+  saleAttrIdAndValueName.value = ''
+  spuParams.value.category3Id = c3Id
   let result: AllTradeMark = await reqAllTradeMark()
   let result1: HasSaleAttrResponseData = await reqAllSaleAttr()
+  allTradeMark.value = result.data
   allSaleAttr.value = result1.data
 }
 //照片墙点击预览按钮的时候触发的钩子
@@ -229,6 +288,17 @@ const toLook = (row: SaleAttr) => {
 const toEdit = (row: SaleAttr) => {
   row.flag = true
 }
+const addSaleAttr = () => {
+  const [baseSaleAttrId, saleAttrName] = saleAttrIdAndValueName.value.split(':')
+  let newSaleAttr: SaleAttr = {
+    baseSaleAttrId,
+    saleAttrName,
+    spuSaleAttrValueList: [],
+  }
+  saleAttr.value.push(newSaleAttr)
+  saleAttrIdAndValueName.value = ''
+}
+
 //对外暴露
 defineExpose({ initAddSpu, initHasSpuData })
 </script>
